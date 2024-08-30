@@ -65,26 +65,28 @@ def run(
 
     out_dir = pge_runconfig.product_path_group.output_directory
     out_dir.mkdir(exist_ok=True, parents=True)
-    logger.info(f"Creating {len(out_paths.timeseries_paths)} outputs in {out_dir}")
+    logger.info(
+        f"Creating {len(out_paths.timeseries_paths)} outputs in {out_dir}")
 
     # group dataset based on date to find corresponding files and set None
     # for the layers that do not exist: correction layers specifically
     grouped_unwrapped_paths = group_by_date(out_paths.timeseries_paths)
     unw_date_keys = list(grouped_unwrapped_paths.keys())
-    _assert_dates_match(unw_date_keys, out_paths.conncomp_paths, "connected components")
-    _assert_dates_match(unw_date_keys, out_paths.stitched_cor_paths, "correlation")
+    _assert_dates_match(unw_date_keys, out_paths.conncomp_paths,
+                        "connected components")
+    _assert_dates_match(unw_date_keys, out_paths.stitched_cor_paths,
+                        "correlation")
 
     if out_paths.tropospheric_corrections is not None:
-        _assert_dates_match(
-            unw_date_keys, out_paths.tropospheric_corrections, "troposphere"
-        )
+        _assert_dates_match(unw_date_keys, out_paths.tropospheric_corrections,
+                            "troposphere")
 
     if out_paths.ionospheric_corrections is not None:
-        _assert_dates_match(
-            unw_date_keys, out_paths.ionospheric_corrections, "ionosphere"
-        )
+        _assert_dates_match(unw_date_keys, out_paths.ionospheric_corrections,
+                            "ionosphere")
 
-    logger.info(f"Creating {len(out_paths.timeseries_paths)} outputs in {out_dir}")
+    logger.info(
+        f"Creating {len(out_paths.timeseries_paths)} outputs in {out_dir}")
     create_displacement_products(
         out_paths,
         out_dir=out_dir,
@@ -96,7 +98,8 @@ def run(
     logger.info("Finished creating output products.")
 
     if pge_runconfig.product_path_group.save_compressed_slc:
-        logger.info(f"Saving {len(out_paths.comp_slc_dict.items())} compressed SLCs")
+        logger.info(
+            f"Saving {len(out_paths.comp_slc_dict.items())} compressed SLCs")
         output_dir = out_dir / "compressed_slcs"
         output_dir.mkdir(exist_ok=True)
         product.create_compressed_products(
@@ -105,17 +108,18 @@ def run(
             cslc_file_list=cfg.cslc_file_list,
         )
 
-    logger.info(f"Product type: {pge_runconfig.primary_executable.product_type}")
-    logger.info(f"Product version: {pge_runconfig.product_path_group.product_version}")
+    logger.info(
+        f"Product type: {pge_runconfig.primary_executable.product_type}")
+    logger.info(
+        f"Product version: {pge_runconfig.product_path_group.product_version}")
     max_mem = get_max_memory_usage(units="GB")
     logger.info(f"Maximum memory usage: {max_mem:.2f} GB")
     logger.info(f"Config file dolphin version: {cfg._dolphin_version}")
     logger.info(f"Current running disp_s1 version: {__version__}")
 
 
-def _assert_dates_match(
-    unw_date_keys: list[datetime], test_paths: list[Path], name: str
-):
+def _assert_dates_match(unw_date_keys: list[datetime], test_paths: list[Path],
+                        name: str):
     """
 
     :param unw_date_keys: list[datetime]:
@@ -197,10 +201,12 @@ def process_product(
     ref_date, secondary_date = get_dates(output_name)[:2]
     # The reference one could be compressed, or real
     # Also possible to have multiple compressed files with same reference date
-    ref_slc_files = date_to_cslc_files[(ref_date,)]
+    ref_slc_files = date_to_cslc_files[(ref_date, )]
     logger.info(f"Found {len(ref_slc_files)} for reference date {ref_date}")
-    secondary_slc_files = date_to_cslc_files[(secondary_date,)]
-    logger.info(f"Found {len(secondary_slc_files)} for secondary date {secondary_date}")
+    secondary_slc_files = date_to_cslc_files[(secondary_date, )]
+    logger.info(
+        f"Found {len(secondary_slc_files)} for secondary date {secondary_date}"
+    )
 
     product.create_output_product(
         output_name=output_name,
@@ -244,11 +250,9 @@ def create_displacement_products(
 
     """
     tropo_files = out_paths.tropospheric_corrections or [None] * len(
-        out_paths.timeseries_paths
-    )
+        out_paths.timeseries_paths)
     iono_files = out_paths.ionospheric_corrections or [None] * len(
-        out_paths.timeseries_paths
-    )
+        out_paths.timeseries_paths)
     unwrapper_mask_files = [
         # TODO: probably relying too much on dolphin's internals to be safe
         # we should figure out how to save/use the "combined_mask" from dolphin
@@ -265,8 +269,7 @@ def create_displacement_products(
             troposphere=tropo,
             ionosphere=iono,
             unwrapper_mask=mask_f,
-        )
-        for unw, cc, cor, tropo, iono, mask_f in zip(
+        ) for unw, cc, cor, tropo, iono, mask_f in zip(
             out_paths.timeseries_paths,
             out_paths.conncomp_paths,
             out_paths.stitched_cor_paths,
@@ -276,9 +279,8 @@ def create_displacement_products(
         )
     ]
 
-    executor_class = (
-        ProcessPoolExecutor if max_workers > 1 else DummyProcessPoolExecutor
-    )
+    executor_class = (ProcessPoolExecutor
+                      if max_workers > 1 else DummyProcessPoolExecutor)
     ctx = get_context("spawn")
     with executor_class(max_workers=max_workers, mp_context=ctx) as executor:
         list(  # Force evaluation to retrieve results/raise exceptions
@@ -290,5 +292,4 @@ def create_displacement_products(
                 repeat(pge_runconfig),
                 repeat(wavelength_cutoff),
                 repeat(reference_point),
-            )
-        )
+            ))
