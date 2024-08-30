@@ -33,15 +33,11 @@ def run(
 ):
     """Run the displacement workflow on a stack of SLCs.
 
-    Parameters
-    ----------
-    cfg : DisplacementWorkflow
-        `DisplacementWorkflow` object for controlling the workflow.
-    debug : bool, optional
-        Enable debug logging, by default False.
-    pge_runconfig : RunConfig, optional
-        PGE-specific metadata for the output product.
+    :param cfg: DisplacementWorkflow: 
+    :param pge_runconfig: RunConfig: 
+    :param debug: bool:  (Default value = False)
 
+    
     """
     setup_logging(logger_name="disp_s1", debug=debug, filename=cfg.log_file)
 
@@ -116,6 +112,13 @@ def run(
 def _assert_dates_match(
     unw_date_keys: list[datetime], test_paths: list[Path], name: str
 ):
+    """
+
+    :param unw_date_keys: list[datetime]: 
+    :param test_paths: list[Path]: 
+    :param name: str: 
+
+    """
     if list(group_by_date(test_paths).keys()) != unw_date_keys:
         msg = f"Mismatch of dates found for {name}:"
         msg += f"{unw_date_keys =}, but {name} has {test_paths}"
@@ -145,27 +148,28 @@ def process_product(
 ) -> Path:
     """Create a single displacement product.
 
-    Parameters
-    ----------
-    files : ProductFiles
-        NamedTuple containing paths for all displacement-related files.
-    out_dir : Path
-        Output directory for the product.
-    date_to_cslc_files: Mapping[tuple[datetime], list[Path]]
-        Dictionary mapping dates to real/compressed SLC files.
-    pge_runconfig : RunConfig
-        Configuration object for the PGE run.
-    wavelength_cutoff : float
-        Wavelength cutoff for filtering long wavelengths.
-    reference_point : ReferencePoint, optional
-        Reference point recorded from dolphin after unwrapping.
+    :param files: NamedTuple containing paths for all displacement-related files.
+    :type files: ProductFiles
+    :param out_dir: Output directory for the product.
+    :type out_dir: Path
+    :param date_to_cslc_files: Dictionary mapping dates to real/compressed SLC files.
+    :type date_to_cslc_files: Mapping[tuple[datetime], list[Path]]
+    :param pge_runconfig: Configuration object for the PGE run.
+    :type pge_runconfig: RunConfig
+    :param wavelength_cutoff: Wavelength cutoff for filtering long wavelengths.
+    :type wavelength_cutoff: float
+    :param reference_point: Reference point recorded from dolphin after unwrapping.
         If none, leaves product attributes empty.
+    :type reference_point: ReferencePoint, optional
+    :param files: ProductFiles: 
+    :param out_dir: Path: 
+    :param date_to_cslc_files: Mapping[tuple[datetime]: 
+    :param list[Path]]: 
+    :param pge_runconfig: RunConfig: 
+    :param wavelength_cutoff: float: 
+    :param reference_point: ReferencePoint | None:  (Default value = None)
 
-    Returns
-    -------
-    Path
-        Path to the processed output.
-
+    
     """
     corrections = {}
 
@@ -224,29 +228,16 @@ def create_displacement_products(
 ) -> None:
     """Run parallel processing for all interferograms.
 
-    Parameters
-    ----------
-    out_paths : OutputPaths
-        Object containing paths for various output files.
-    out_dir : Path
-        Output directory for the products.
-    date_to_cslc_files: Mapping[tuple[datetime], list[Path]]
-        Dictionary mapping dates to real/compressed SLC files.
-    pge_runconfig : RunConfig
-        Configuration object for the PGE run.
-    reference_point : ReferencePoint, optional
-        Named tuple with (row, col, lat, lon) of selected reference pixel.
-        If None, will record empty in the dataset's attributes
-    wavelength_cutoff : float
-        Wavelength cutoff (in meters) for filtering long wavelengths.
-        Default is 50_000.
-    reference_point : ReferencePoint, optional
-        Reference point recorded from dolphin after unwrapping.
-        If none, leaves product attributes empty.
-    max_workers : int
-        Number of parallel products to process.
-        Default is 2.
+    :param out_paths: OutputPaths: 
+    :param out_dir: Path: 
+    :param date_to_cslc_files: Mapping[tuple[datetime]: 
+    :param list[Path]]: 
+    :param pge_runconfig: RunConfig: 
+    :param wavelength_cutoff: float:  (Default value = 50_000.0)
+    :param reference_point: ReferencePoint | None:  (Default value = None)
+    :param max_workers: int:  (Default value = 2)
 
+    
     """
     tropo_files = out_paths.tropospheric_corrections or [None] * len(
         out_paths.timeseries_paths
