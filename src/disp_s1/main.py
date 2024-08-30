@@ -37,11 +37,11 @@ def run(
 ):
     """Run the displacement workflow on a stack of SLCs.
 
-    :param cfg: DisplacementWorkflow: 
-    :param pge_runconfig: RunConfig: 
+    :param cfg: DisplacementWorkflow:
+    :param pge_runconfig: RunConfig:
     :param debug: bool:  (Default value = False)
 
-    
+
     """
     setup_logging(logger_name="disp_s1", debug=debug, filename=cfg.log_file)
 
@@ -118,9 +118,9 @@ def _assert_dates_match(
 ):
     """
 
-    :param unw_date_keys: list[datetime]: 
-    :param test_paths: list[Path]: 
-    :param name: str: 
+    :param unw_date_keys: list[datetime]:
+    :param test_paths: list[Path]:
+    :param name: str:
 
     """
     if list(group_by_date(test_paths).keys()) != unw_date_keys:
@@ -165,15 +165,15 @@ def process_product(
     :param reference_point: Reference point recorded from dolphin after unwrapping.
         If none, leaves product attributes empty.
     :type reference_point: ReferencePoint, optional
-    :param files: ProductFiles: 
-    :param out_dir: Path: 
-    :param date_to_cslc_files: Mapping[tuple[datetime]: 
-    :param list[Path]]: 
-    :param pge_runconfig: RunConfig: 
-    :param wavelength_cutoff: float: 
+    :param files: ProductFiles:
+    :param out_dir: Path:
+    :param date_to_cslc_files: Mapping[tuple[datetime]:
+    :param list[Path]]:
+    :param pge_runconfig: RunConfig:
+    :param wavelength_cutoff: float:
     :param reference_point: ReferencePoint | None:  (Default value = None)
 
-    
+
     """
     corrections = {}
 
@@ -232,16 +232,16 @@ def create_displacement_products(
 ) -> None:
     """Run parallel processing for all interferograms.
 
-    :param out_paths: OutputPaths: 
-    :param out_dir: Path: 
-    :param date_to_cslc_files: Mapping[tuple[datetime]: 
-    :param list[Path]]: 
-    :param pge_runconfig: RunConfig: 
+    :param out_paths: OutputPaths:
+    :param out_dir: Path:
+    :param date_to_cslc_files: Mapping[tuple[datetime]:
+    :param list[Path]]:
+    :param pge_runconfig: RunConfig:
     :param wavelength_cutoff: float:  (Default value = 50_000.0)
     :param reference_point: ReferencePoint | None:  (Default value = None)
     :param max_workers: int:  (Default value = 2)
 
-    
+
     """
     tropo_files = out_paths.tropospheric_corrections or [None] * len(
         out_paths.timeseries_paths
