@@ -118,7 +118,7 @@ def _assert_dates_match(
 ):
     if list(group_by_date(test_paths).keys()) != unw_date_keys:
         msg = f"Mismatch of dates found for {name}:"
-        msg += f"{unw_date_keys = }, but {name} has {test_paths}"
+        msg += f"{unw_date_keys =}, but {name} has {test_paths}"
         raise ValueError(msg)
 
 
