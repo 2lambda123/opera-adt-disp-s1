@@ -54,7 +54,7 @@ def get_zenodo_links(
         url = f"https://sandbox.zenodo.org/api/records/{record}"
     else:
         url = f"https://zenodo.org/api/records/{record}"
-    r = requests.get(url)
+    r = requests.get(url, timeout=60)
     r.raise_for_status()
     data = r.json()
 
