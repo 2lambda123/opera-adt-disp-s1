@@ -9,18 +9,22 @@ from multiprocessing import get_context
 from pathlib import Path
 from typing import NamedTuple
 
-from dolphin._log import log_runtime, setup_logging
+from disp_s1 import __version__
+from disp_s1 import product
+from disp_s1.pge_runconfig import RunConfig
+from dolphin._log import log_runtime
+from dolphin._log import setup_logging
 from dolphin.io import load_gdal
-from dolphin.utils import DummyProcessPoolExecutor, get_max_memory_usage
+from dolphin.utils import DummyProcessPoolExecutor
+from dolphin.utils import get_max_memory_usage
 from dolphin.workflows.config import DisplacementWorkflow
 from dolphin.workflows.displacement import OutputPaths
 from dolphin.workflows.displacement import run as run_displacement
-from opera_utils import get_dates, group_by_date
+from opera_utils import get_dates
+from opera_utils import group_by_date
 
-from disp_s1 import __version__, product
-from disp_s1.pge_runconfig import RunConfig
-
-from ._reference import ReferencePoint, read_reference_point
+from ._reference import read_reference_point
+from ._reference import ReferencePoint
 
 logger = logging.getLogger(__name__)
 
